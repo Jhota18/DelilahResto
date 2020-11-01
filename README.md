@@ -36,7 +36,3 @@ Para realizar las pruebas a cada uno de los endpoints debe verificar en el archi
 ## Autores
 
 * **Jhonatan Gomez** - [Delilah Resto](https://github.com/Jhota18/DelilahResto)
-
-
-
-
