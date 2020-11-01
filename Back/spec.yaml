@@ -1,0 +1,330 @@
+openapi: 3.0.1
+info:
+  title: Delilah Restó
+  description: API para realizar pedidos del restaurante Delilah Restó. Como cliente podras registrarte para ver el listado de nuestros productos y realizar tu pedido. Los administradores del restaurante podrán recibir y actualizar el estado de los pedidos.
+  contact:
+    email: jhonatangomez_18@hotmail.com
+  version: 1.0.0
+servers:
+- url: http://localhost:3000/users/login
+tags:
+- name: createU
+  description: Creacion y registro de usuarios
+- name: Login
+  description: Ingreso de usuarios registrados
+- name: createR
+  description: Creacion de nuevos pedidos
+- name: updateR
+  description: Actualizacion del estado de los pedidos
+- name: List
+  description: Obtener lista de productos
+- name: createP
+  description: Creacion de un nuevo producto
+- name: updateP
+  description: Actualizacion de productos existentes
+- name: deleteP
+  description: Eliminacion de productos existentes
+paths:
+  /users/createU:
+    post:
+      tags:
+      - createU
+      summary: Crear nuevo usuario en la base de datos
+      description: Usuario a crear y registrar en la base de datos
+      operationId: addUser
+      requestBody:
+        description: Datos del usuario a registrar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateU'
+        required: true
+      responses:
+        200:
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/CreateU'
+        400:
+          description: Este email ya esta registrado
+        406:
+          description: Por favor llene todos los campos
+        500:
+          description: Tenemos problemas en el servidor, por favor intente mas tarde
+  /users/login:
+    post:
+      tags:
+      - Login
+      summary: Ingreso de usuarios registrados
+      description: Ingreso de usuarios registrados en la base de datos
+      operationId: loginUser
+      requestBody:
+        description: Email y password del usuario registrado
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+        required: true
+      responses:
+        200:
+          description: "Ingreso exitoso, el siguiente es su token de autorizacion:"
+          content:
+            application/json:
+              schema:
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikpob25hdGFuIiwiZW1haWwiOiJqaG9uYXRhbkBjb3JyZW8uY29tIiwicGhvbmUiOiIzMjA2NDA0Njc4IiwiYWRkcmVzcyI6ImRpcmVjY2lvbiIsImFkbWluIjoxLCJpYXQiOjE2MDQwMjM0Nzh9.Hs2wr5wnq76_ahT6qnfGpIGcQnrOZWvgzLZkNST5P2I"
+        401:
+          description: Usuario o contraseña invalidos
+        406:
+          description: Por favor llene todos los campos
+  /requests/createR:
+    post:
+      tags:
+      - createR
+      summary: Crear un nuevo pedido
+      description: Creacion de pedidos, debe estar autenticado para realizar esta
+        operación
+      operationId: addRequest
+      requestBody:
+        description: Pedido
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createR'
+        required: true
+      responses:
+        200:
+          description: Pedido registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/requestResponse'
+        400:
+          description: Usuario no se pudo verificar
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este
+            servicio
+        406:
+          description: Campos enviados no válidos
+        500:
+          description: Error interno, no se pudo crear la orden
+      security:
+      - bearerAuth: []
+  /requests/updateR/{requestId}:
+    patch:
+      tags:
+      - updateR
+      summary: Actualizar pedidos
+      description: Actualizar pedidos por Id
+      operationId: updateRequest
+      parameters:
+      - name: requestId
+        in: path
+        description: Id del pedido a actualizar
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Actualizar estado del pedido
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: "string"
+      responses:
+        200:
+          description: Estado del producto actualizado correctamente
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
+        403:
+          description: Debes tener permisos de administrador para realizar esta petición
+        404:
+          description: Datos no encontrados, no se pudo actualizar tu pedido.
+        406:
+          description: Campos no validos
+        500:
+          description: Por favor intente mas tarde
+      security:
+      - bearerAuth: []
+  /products/list:
+    get:
+      tags:
+      - List
+      summary: Obtener lista de todos los productos disponibles
+      description: Obtiene la lsita de productos disponibles para los usuarios registrados
+      operationId: getProductList
+      responses:
+        200:
+          description: Consulta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createP'
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
+        500:
+          description: Error interno, por favor intente mas tarde
+      security:
+      - bearerAuth: []    
+  /products/createP:
+    post:
+      tags:
+      - createP
+      summary: Crear un nuevo producto
+      description: Creacion de productos
+      operationId: createProduct
+      requestBody:
+        description: Producto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createP'
+        required: true
+      responses:
+        200:
+          description: Producto agregado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createP'
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
+        403:
+          description: Debes tener permisos de administrador para realizar esta petición
+        406:
+          description: Por favor llene todos los campos
+        500:
+          description: Poseemos problemas, por favor intenta mas tarde
+      security:
+      - bearerAuth: []
+  /products/updateP/{productId}:
+    patch:
+      tags:
+      - updateP
+      summary: Actualizar productos
+      description: Actualizar productos por Id
+      operationId: updateProduct
+      parameters:
+      - name: productId
+        in: path
+        description: Id del producto a actualizar
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Actualizar caracteristicas del producto
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createP"
+      responses:
+        200:
+          description: Producto actualizado con exito
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
+        403:
+          description: Debes tener permisos de administrador para realizar esta petición
+        404:
+          description: Datos no encontrados, no se Pudo actualizar el producto.
+        500:
+          description: intente de nuevo mas tarde.
+      security:
+      - bearerAuth: []    
+  /products/deleteP/{productId}:
+    delete:
+      tags:
+      - deleteP
+      summary: Eliminar producto
+      description: Eliminar producto por ID
+      operationId: deleteProduct
+      parameters:
+      - name: productId
+        in: path
+        description: Id del producto a eliminar
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Producto eliminado satisfactoriamente
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio.
+        403:
+          description: Debes tener permisos de administrador para realizar esta petición.
+        404:
+          description: Producto no encontrado, por favor verifique.
+        500:
+          description: Poseemos problemas, por favor intenta mas tarde.
+      security:
+      - bearerAuth: []    
+components:
+  schemas:
+    CreateU:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        admin:
+          type: boolean
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    createR:
+      type: object
+      properties:
+        payment_method:
+          type: string
+        userId:
+          type: integer
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: integer
+              quantity:
+                type: integer
+    requestResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          quantity:
+            type: integer
+          requestId:
+            type: integer
+          productId:
+            type: integer
+          
+    createP:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+          
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
