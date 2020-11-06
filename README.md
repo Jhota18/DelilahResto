@@ -28,6 +28,14 @@ U=**INGRESE AQUI SU USUARIO DE BASES DE DATOS**
 P=**INGRESE LA CONTRASEÑA DE SU USUARIO DE BASE DE DATOS**
 S=**INGRESE UNA CLAVE SECRETA PARA LA VALIDACION DE LOS JSON WEB TOKENS**
 
+4.Inice el proyecto en la terminal de su editor de codigo ejecutando el comando node server.js para inicar la base de datos y poder empezar a realizar las pruebas.
+
+```
+
+node server.js
+
+```
+
 
 ## Ejecutando las pruebas
 
