@@ -8,27 +8,19 @@ info:
 servers:
 - url: http://localhost:3000/users/login
 tags:
-- name: createU
+- name: Users
   description: Creacion y registro de usuarios
 - name: Login
   description: Ingreso de usuarios registrados
-- name: createR
-  description: Creacion de nuevos pedidos
-- name: updateR
-  description: Actualizacion del estado de los pedidos
-- name: List
-  description: Obtener lista de productos
-- name: createP
-  description: Creacion de un nuevo producto
-- name: updateP
-  description: Actualizacion de productos existentes
-- name: deleteP
-  description: Eliminacion de productos existentes
+- name: Requests
+  description: Creacion de nuevos pedidos,Actualizacion del estado de los pedidos
+- name: Products
+  description: Obtener lista de productos, creacion de un nuevo producto, actualizacion de productos existentes y eliminacion de productos.
 paths:
   /users/createU:
     post:
       tags:
-      - createU
+      - Users
       summary: Crear nuevo usuario en la base de datos
       description: Usuario a crear y registrar en la base de datos
       operationId: addUser
@@ -80,7 +72,7 @@ paths:
   /requests/createR:
     post:
       tags:
-      - createR
+      - Requests
       summary: Crear un nuevo pedido
       description: Creacion de pedidos, debe estar autenticado para realizar esta
         operación
@@ -113,7 +105,7 @@ paths:
   /requests/updateR/{requestId}:
     patch:
       tags:
-      - updateR
+      - Requests
       summary: Actualizar pedidos
       description: Actualizar pedidos por Id
       operationId: updateRequest
@@ -151,7 +143,7 @@ paths:
   /products/list:
     get:
       tags:
-      - List
+      - Products
       summary: Obtener lista de todos los productos disponibles
       description: Obtiene la lsita de productos disponibles para los usuarios registrados
       operationId: getProductList
@@ -171,7 +163,7 @@ paths:
   /products/createP:
     post:
       tags:
-      - createP
+      - Products
       summary: Crear un nuevo producto
       description: Creacion de productos
       operationId: createProduct
@@ -202,7 +194,7 @@ paths:
   /products/updateP/{productId}:
     patch:
       tags:
-      - updateP
+      - Products
       summary: Actualizar productos
       description: Actualizar productos por Id
       operationId: updateProduct
@@ -235,7 +227,7 @@ paths:
   /products/deleteP/{productId}:
     delete:
       tags:
-      - deleteP
+      - Products
       summary: Eliminar producto
       description: Eliminar producto por ID
       operationId: deleteProduct
