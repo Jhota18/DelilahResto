@@ -152,6 +152,10 @@ paths:
       responses:
         200:
           description: Consulta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/requestResponse"
         401:
           description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
         500:
@@ -168,6 +172,10 @@ paths:
       responses:
         200:
           description: Consulta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/orderResponse"
         401:
           description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
         500:
@@ -354,7 +362,7 @@ components:
                 type: integer
               quantity:
                 type: integer
-    requestResponse:
+    orderResponse:
       type: array
       items:
         type: object
@@ -365,7 +373,21 @@ components:
             type: integer
           productId:
             type: integer
-
+    requestResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          request_date:
+            type: string
+          status:
+            type: string
+          payment_method:
+            type: string
+          userId:
+            type: integer
     createP:
       type: object
       properties:
