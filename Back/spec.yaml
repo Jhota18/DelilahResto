@@ -6,21 +6,21 @@ info:
     email: jhonatangomez_18@hotmail.com
   version: 1.0.0
 servers:
-- url: http://localhost:3000/users/login
+  - url: http://localhost:3000/users/login
 tags:
-- name: Users
-  description: Creacion y registro de usuarios
-- name: Login
-  description: Ingreso de usuarios registrados
-- name: Requests
-  description: Creacion de nuevos pedidos,Actualizacion del estado de los pedidos
-- name: Products
-  description: Obtener lista de productos, creacion de un nuevo producto, actualizacion de productos existentes y eliminacion de productos.
+  - name: Users
+    description: Creacion y registro de usuarios
+  - name: Login
+    description: Ingreso de usuarios registrados
+  - name: Requests
+    description: Creacion de nuevos pedidos,Actualizacion del estado de los pedidos
+  - name: Products
+    description: Obtener lista de productos, creacion de un nuevo producto, actualizacion de productos existentes y eliminacion de productos.
 paths:
   /users/createU:
     post:
       tags:
-      - Users
+        - Users
       summary: Crear nuevo usuario en la base de datos
       description: Usuario a crear y registrar en la base de datos
       operationId: addUser
@@ -29,15 +29,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateU'
+              $ref: "#/components/schemas/CreateU"
         required: true
       responses:
         200:
           description: Usuario registrado exitosamente
           content:
             application/json:
-              schema: 
-                $ref: '#/components/schemas/CreateU'
+              schema:
+                $ref: "#/components/schemas/CreateU"
         400:
           description: Este email ya esta registrado
         406:
@@ -47,7 +47,7 @@ paths:
   /users/login:
     post:
       tags:
-      - Login
+        - Login
       summary: Ingreso de usuarios registrados
       description: Ingreso de usuarios registrados en la base de datos
       operationId: loginUser
@@ -56,7 +56,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/login'
+              $ref: "#/components/schemas/login"
         required: true
       responses:
         200:
@@ -72,9 +72,10 @@ paths:
   /requests/createR:
     post:
       tags:
-      - Requests
+        - Requests
       summary: Crear un nuevo pedido
-      description: Creacion de pedidos, debe estar autenticado para realizar esta
+      description:
+        Creacion de pedidos, debe estar autenticado para realizar esta
         operación
       operationId: addRequest
       requestBody:
@@ -82,7 +83,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createR'
+              $ref: "#/components/schemas/createR"
         required: true
       responses:
         200:
@@ -90,32 +91,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/requestResponse'
+                $ref: "#/components/schemas/requestResponse"
         400:
           description: Usuario no se pudo verificar
         401:
-          description: Debes ingresar con tu usuario y contraseña para utilizar este
+          description:
+            Debes ingresar con tu usuario y contraseña para utilizar este
             servicio
         406:
           description: Campos enviados no válidos
         500:
           description: Error interno, no se pudo crear la orden
       security:
-      - bearerAuth: []
+        - bearerAuth: []
   /requests/updateR/{requestId}:
     patch:
       tags:
-      - Requests
+        - Requests
       summary: Actualizar pedidos
       description: Actualizar pedidos por Id
       operationId: updateRequest
       parameters:
-      - name: requestId
-        in: path
-        description: Id del pedido a actualizar
-        required: true
-        schema:
-          type: integer
+        - name: requestId
+          in: path
+          description: Id del pedido a actualizar
+          required: true
+          schema:
+            type: integer
       requestBody:
         description: Actualizar estado del pedido
         content:
@@ -139,11 +141,72 @@ paths:
         500:
           description: Por favor intente mas tarde
       security:
-      - bearerAuth: []
+        - bearerAuth: []
+  /requests/list:
+    get:
+      tags:
+        - Requests
+      summary: Obtener lista de pedidos
+      description: Obtener lista de pedidos
+      operationId: getRequests
+      responses:
+        200:
+          description: Consulta exitosa
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
+        500:
+          description: Por favor intente mas tarde
+      security:
+        - bearerAuth: []
+  /requests/OrderList:
+    get:
+      tags:
+        - Requests
+      summary: Obtener lista de ordenes
+      description: Obtener lista de ordenes, donde se relaciona el Id de usuario, Id de productos e Id de pedido.
+      operationId: getOrders
+      responses:
+        200:
+          description: Consulta exitosa
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
+        500:
+          description: Por favor intente mas tarde
+      security:
+        - bearerAuth: []
+  /requests/delete/{requestId}:
+    delete:
+      tags:
+        - Requests
+      summary: Eliminar pedido por ID
+      description: Eliminar pedido por ID
+      operationId: deleteRequest
+      parameters:
+        - name: requestId
+          in: path
+          description: Id del pedido a eliminar
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Pedido eliminado satisfactoriamente
+        400:
+          description: Por favor envíe el ID del pedido.
+        401:
+          description: Debes ingresar con tu usuario y contraseña para utilizar este servicio.
+        403:
+          description: Debes tener permisos de administrador para realizar esta petición.
+        404:
+          description: Pedido no encontrado, por favor verifique.
+        500:
+          description: Poseemos problemas, por favor intenta mas tarde.
+      security:
+        - bearerAuth: []
   /products/list:
     get:
       tags:
-      - Products
+        - Products
       summary: Obtener lista de todos los productos disponibles
       description: Obtiene la lsita de productos disponibles para los usuarios registrados
       operationId: getProductList
@@ -153,17 +216,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createP'
+                $ref: "#/components/schemas/createP"
         401:
           description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
         500:
           description: Error interno, por favor intente mas tarde
       security:
-      - bearerAuth: []    
+        - bearerAuth: []
   /products/createP:
     post:
       tags:
-      - Products
+        - Products
       summary: Crear un nuevo producto
       description: Creacion de productos
       operationId: createProduct
@@ -172,7 +235,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createP'
+              $ref: "#/components/schemas/createP"
         required: true
       responses:
         200:
@@ -180,7 +243,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createP'
+                $ref: "#/components/schemas/createP"
         401:
           description: Debes ingresar con tu usuario y contraseña para utilizar este servicio
         403:
@@ -190,21 +253,21 @@ paths:
         500:
           description: Poseemos problemas, por favor intenta mas tarde
       security:
-      - bearerAuth: []
+        - bearerAuth: []
   /products/updateP/{productId}:
     patch:
       tags:
-      - Products
+        - Products
       summary: Actualizar productos
       description: Actualizar productos por Id
       operationId: updateProduct
       parameters:
-      - name: productId
-        in: path
-        description: Id del producto a actualizar
-        required: true
-        schema:
-          type: integer
+        - name: productId
+          in: path
+          description: Id del producto a actualizar
+          required: true
+          schema:
+            type: integer
       requestBody:
         description: Actualizar caracteristicas del producto
         content:
@@ -223,21 +286,21 @@ paths:
         500:
           description: intente de nuevo mas tarde.
       security:
-      - bearerAuth: []    
+        - bearerAuth: []
   /products/deleteP/{productId}:
     delete:
       tags:
-      - Products
+        - Products
       summary: Eliminar producto
       description: Eliminar producto por ID
       operationId: deleteProduct
       parameters:
-      - name: productId
-        in: path
-        description: Id del producto a eliminar
-        required: true
-        schema:
-          type: integer
+        - name: productId
+          in: path
+          description: Id del producto a eliminar
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: Producto eliminado satisfactoriamente
@@ -250,7 +313,7 @@ paths:
         500:
           description: Poseemos problemas, por favor intenta mas tarde.
       security:
-      - bearerAuth: []    
+        - bearerAuth: []
 components:
   schemas:
     CreateU:
@@ -302,7 +365,7 @@ components:
             type: integer
           productId:
             type: integer
-          
+
     createP:
       type: object
       properties:
@@ -314,7 +377,7 @@ components:
           type: string
         price:
           type: string
-          
+
   securitySchemes:
     bearerAuth:
       type: http
